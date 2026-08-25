@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GHOST ESPORTS - SECURE - FINAL</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,Arial}
+body{background:#0a0a0f!important;color:#fff;margin:0;overflow-x:hidden}
+.app{max-width:440px;margin:0 auto;background:#0a0a0f;min-height:100vh;padding-bottom:90px}
+.top{padding:16px 18px;display:flex;justify-content:space-between;align-items:center;background:#0a0a0f!important;position:sticky;top:0;z-index:9999;border-bottom:1px solid #1e1e26}
+.logo{font-weight:900;font-size:26px;color:#fff}.logo span{color:#8b5cf6}
+.icons{display:flex;gap:8px}
+.icon{width:44px;height:44px;border-radius:14px;background:#1e1e26;border:1px solid #2a2a35;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;color:#fff}
+.icon.freeBtn{background:#22c55e!important;color:#000!important;font-size:10px!important;font-weight:900!important}
+.icon.freeBtn.locked{background:#333!important;color:#666!important;opacity:0.5!important}
+.icon.crown{opacity:0.12!important;background:#12121a!important;border:1px solid #333!important;display:flex!important}
+.page{display:none}.page.active{display:block}
+.card{background:#12121a;border-radius:18px;padding:16px;margin:12px 16px;border:1px solid #2a2a35;cursor:pointer;position:relative}
+.card.free{border-color:#22c55e;border-width:2px;background:linear-gradient(135deg,#122016,#0a1a0f)}
+.card.free.locked{border-color:#444!important;background:#1a1a1a!important;opacity:0.5!important;pointer-events:none!important}
+.badge{padding:5px 12px;border-radius:20px;font-size:13px;font-weight:900;display:inline-block}
+.badge.free{background:#22c55e;color:#000}.badge.solo{background:#22c55e;color:#000}.badge.duo{background:#3b82f6;color:#fff}.badge.squad{background:#a855f7;color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}
+.slot{background:#0a0a0f;border:1px solid #222;border-radius:12px;padding:12px;text-align:center}
+.slot.book{background:#122016;border-color:#22c55e}
+.payBox{background:#000;border:2px solid #22c55e;border-radius:16px;padding:16px;margin:12px 16px;text-align:center;display:none}
+.editBox{background:#1a1a2e;border:2px dashed #8b5cf6;border-radius:16px;padding:14px;margin:12px 16px}
+.editBox.priceBox{background:#1a2e1a;border:2px dashed #22c55e;border-radius:16px;padding:14px;margin:12px 16px}
+.editBox.codeBox{background:#2e1a1a;border:2px dashed #ef4444;border-radius:16px;padding:14px;margin:12px 16px}
+.secureBox{background:#000;border:2px solid #facc15;border-radius:16px;padding:20px;margin:16px}
+input{width:100%;background:#0a0a0f;border:1px solid #333;padding:14px;border-radius:12px;color:#fff;margin-top:10px;outline:none}
+.back{background:#222;color:#fff;border:none;padding:10px 16px;border-radius:20px;cursor:pointer}
+.upiBoxBig{background:linear-gradient(135deg,#122016,#0a1a0f);border:2px solid #22c55e;border-radius:16px;padding:18px;margin:12px 16px;text-align:center}
+.upiBox{background:#000;border:2px solid #22c55e;border-radius:12px;padding:12px;margin-top:10px;text-align:center}
+.freeBanner{background:#22c55e;color:#000;padding:12px 16px;border-radius:12px;margin:12px 16px;text-align:center;font-weight:900}
+.freeBanner.locked{background:#333!important;color:#888!important;border:1px solid #444!important}
+.countdownBox{background:#000;border:1px solid #facc15;border-radius:12px;padding:10px;margin-top:10px;display:flex;justify-content:space-between;align-items:center}
+.countNum{font-size:22px;font-weight:900;color:#facc15}
+.lockOverlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10}
+div[style*="position: fixed"][style*="bottom"], a[href*="htmltoapk"], iframe{display:none!important;}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top">
+<div class="logo">GHOST <span>ESPORTS</span></div>
+<div class="icons">
+<div class="icon freeBtn" id="freeTopBtn" onclick="openPage('freePage')">FREE</div>
+<div class="icon" onclick="openPage('walletPage')">💰</div>
+<div class="icon crown" onclick="openPage('ownerLoginPage')">👑</div>
+</div>
+</div>
+
+<div id="homePage" class="page active">
+<div id="freeBannerHome" class="freeBanner">FIRST LOGIN MATCH FREE - ONE TIME ONLY</div>
+<div id="freeBannerLockedHome" class="freeBanner locked" style="display:none">FREE MATCH USED - LOCKED FOREVER</div>
+<div style="background:#15151e;border:1px solid #23232e;border-radius:20px;padding:18px;margin:12px 16px">
+<div style="font-size:11px;color:#888">NEXT TOURNAMENT</div>
+<div id="gameTimeHome" style="font-size:20px;font-weight:900;color:#facc15;margin-top:6px">Today 9:00 PM - Erangel Solo</div>
+<div class="countdownBox"><div style="text-align:center"><div class="countNum" id="cdHHome">00</div></div><div style="color:#facc15">:</div><div style="text-align:center"><div class="countNum" id="cdMHome">00</div></div><div style="color:#facc15">:</div><div style="text-align:center"><div class="countNum" id="cdSHome">00</div></div></div>
+</div>
+<div style="position:relative"><div class="card free" id="freeCardHome" onclick="openPage('freePage')"><div style="display:flex;gap:10px"><span class="badge free">FREE</span></div><div style="display:flex;gap:12px;margin-top:12px"><div><b id="freePrizeHome">₹500</b> + ₹<span id="freePerKillHome">10</span>/kill</div><div><b style="color:#22c55e">₹0 FREE</b></div><button style="background:#22c55e;color:#000;border:none;padding:8px 14px;border-radius:8px;font-weight:900;font-size:11px;margin-left:auto" id="freeBtnHome">CLAIM FREE</button></div></div><div id="freeLockOverlayHome" class="lockOverlay" style="display:none"><div style="font-size:30px">🔒</div><div style="font-weight:900;color:#888">LOCKED FOREVER</div></div></div>
+<div class="card solo" onclick="openPage('soloPage')"><div style="display:flex;gap:10px"><span class="badge solo">SOLO</span></div><div style="display:flex;gap:12px;margin-top:12px"><div><b id="soloPrizeHome">₹500</b> + ₹<span id="soloPerKillHome">10</span>/kill</div><div><b id="soloEntryHome">₹20</b></div><button style="background:#22c55e;color:#000;border:none;padding:8px 14px;border-radius:8px;font-weight:900;font-size:11px;margin-left:auto">JOIN NOW</button></div></div>
+<div class="card duo" onclick="openPage('duoPage')"><div style="display:flex;gap:10px"><span class="badge duo">DUO</span></div><div style="display:flex;gap:12px;margin-top:12px"><div><b id="duoPrizeHome">₹1000</b> + ₹<span id="duoPerKillHome">20</span>/kill</div><div><b id="duoEntryHome">₹40</b></div><button style="background:#3b82f6;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-weight:900;font-size:11px;margin-left:auto">JOIN NOW</button></div></div>
+<div class="card squad" onclick="openPage('squadPage')"><div style="display:flex;gap:10px"><span class="badge squad">SQUAD</span></div><div style="display:flex;gap:12px;margin-top:12px"><div><b id="squadPrizeHome">₹2000</b> + ₹<span id="squadPerKillHome">40</span>/kill</div><div><b id="squadEntryHome">₹80</b></div><button style="background:#a855f7;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-weight:900;font-size:11px;margin-left:auto">JOIN NOW</button></div></div>
+<div class="upiBoxBig"><div style="font-size:13px;color:#facc15;font-weight:900">PAYMENT - UPI ONLY</div><div style="font-size:20px;color:#22c55e;font-weight:900;margin-top:12px;background:#000;padding:14px;border-radius:12px;border:1px solid #22c55e">suraj-patil-5544@fam</div><button onclick="copyUpi()" style="width:100%;background:#22c55e;color:#000;border:none;padding:14px;border-radius:12px;font-weight:900;font-size:13px;margin-top:12px">COPY UPI ID</button></div>
+</div>
+
+<div id="freePage" class="page"><div style="padding:14px"><button class="back" onclick="openPage('homePage')">‹ Back</button> <b>FREE TOURNAMENT</b></div><div id="freeGrid" class="grid2"></div><div style="background:#000;border:1px solid #22c55e;border-radius:16px;padding:16px;margin:12px 16px"><div id="freeBookContent"><input id="freeName" placeholder="Enter BGMI Name"><input id="freeUpi" placeholder="Enter Your UPI ID"><button onclick="bookFree()" style="width:100%;background:#22c55e;color:#000;padding:14px;border-radius:12px;border:none;font-weight:900;margin-top:12px">CLAIM FREE MATCH NOW</button></div><div id="freeLockedContent" style="display:none;text-align:center;padding:20px"><div style="font-size:40px">🔒</div><div style="font-size:18px;font-weight:900;color:#888">LOCKED FOREVER</div></div></div></div>
+<div id="soloPage" class="page"><div style="padding:14px"><button class="back" onclick="openPage('homePage')">‹ Back</button> <b>SOLO TOURNAMENT</b></div><div id="soloGrid" class="grid2"></div><div style="background:#000;border:1px solid #333;border-radius:16px;padding:16px;margin:12px 16px"><input id="soloName" placeholder="Enter BGMI Name"><input id="soloUpi" placeholder="Enter Your UPI ID"><div class="upiBox"><div style="font-size:18px;color:#22c55e;font-weight:900">suraj-patil-5544@fam</div><button onclick="copyUpi()" style="width:100%;background:#22c55e;color:#000;border:none;padding:10px;border-radius:8px;font-weight:900;font-size:11px;margin-top:8px">COPY UPI ID</button></div><button onclick="payAndBook('solo')" style="width:100%;background:#22c55e;color:#000;padding:14px;border-radius:12px;border:none;font-weight:900;margin-top:12px">PAY <span id="soloEntryBtn">₹20</span> & BOOK SLOT 1</button></div><div id="payVerifyBoxSolo" class="payBox"><input id="utrInputSolo" placeholder="Enter UTR Number" style="text-align:center"><div style="display:flex;gap:8px;margin-top:10px"><button onclick="confirmPayment('solo')" style="flex:1;background:#22c55e;color:#000;padding:12px;border:none;border-radius:12px;font-weight:900">CONFIRM</button><button onclick="cancelPayment('solo')" style="flex:1;background:#333;color:#fff;padding:12px;border:none;border-radius:12px">CANCEL</button></div></div></div>
+<div id="duoPage" class="page"><div style="padding:14px"><button class="back" onclick="openPage('homePage')">‹ Back</button> <b>DUO TOURNAMENT</b></div><div id="duoGrid" class="grid2"></div><div style="background:#000;border:1px solid #333;border-radius:16px;padding:16px;margin:12px 16px"><input id="duoName" placeholder="Enter BGMI Name"><input id="duoUpi" placeholder="Enter Your UPI ID"><div class="upiBox"><div style="font-size:18px;color:#22c55e;font-weight:900">suraj-patil-5544@fam</div><button onclick="copyUpi()" style="width:100%;background:#22c55e;color:#000;border:none;padding:10px;border-radius:8px;font-weight:900;font-size:11px;margin-top:8px">COPY UPI ID</button></div><button onclick="payAndBook('duo')" style="width:100%;background:#3b82f6;color:#fff;padding:14px;border-radius:12px;border:none;font-weight:900;margin-top:12px">PAY <span id="duoEntryBtn">₹40</span> & BOOK SLOT 1</button></div><div id="payVerifyBoxDuo" class="payBox"><input id="utrInputDuo" placeholder="Enter UTR Number" style="text-align:center"><div style="display:flex;gap:8px;margin-top:10px"><button onclick="confirmPayment('duo')" style="flex:1;background:#3b82f6;color:#fff;padding:12px;border:none;border-radius:12px;font-weight:900">CONFIRM</button><button onclick="cancelPayment('duo')" style="flex:1;background:#333;color:#fff;padding:12px;border:none;border-radius:12px">CANCEL</button></div></div></div>
+<div id="squadPage" class="page"><div style="padding:14px"><button class="back" onclick="openPage('homePage')">‹ Back</button> <b>SQUAD TOURNAMENT</b></div><div id="squadGrid" class="grid2"></div><div style="background:#000;border:1px solid #333;border-radius:16px;padding:16px;margin:12px 16px"><input id="squadName" placeholder="Enter BGMI Name"><input id="squadUpi" placeholder="Enter Your UPI ID"><div class="upiBox"><div style="font-size:18px;color:#22c55e;font-weight:900">suraj-patil-5544@fam</div><button onclick="copyUpi()" style="width:100%;background:#22c55e;color:#000;border:none;padding:10px;border-radius:8px;font-weight:900;font-size:11px;margin-top:8px">COPY UPI ID</button></div><button onclick="payAndBook('squad')" style="width:100%;background:#a855f7;color:#fff;padding:14px;border-radius:12px;border:none;font-weight:900;margin-top:12px">PAY <span id="squadEntryBtn">₹80</span> & BOOK SLOT 1</button></div><div id="payVerifyBoxSquad" class="payBox"><input id="utrInputSquad" placeholder="Enter UTR Number" style="text-align:center"><div style="display:flex;gap:8px;margin-top:10px"><button onclick="confirmPayment('squad')" style="flex:1;background:#a855f7;color:#fff;padding:12px;border:none;border-radius:12px;font-weight:900">CONFIRM</button><button onclick="cancelPayment('squad')" style="flex:1;background:#333;color:#fff;padding:12px;border:none;border-radius:12px">CANCEL</button></div></div></div>
+
+<div id="ownerLoginPage" class="page">
+<div style="padding:14px"><button class="back" onclick="openPage('homePage')">‹ Back</button> <b>OWNER PANEL - SECURE ACCESS</b></div>
+<!-- CODE HIDDEN - KUTHECH NUMBER DISNAR NAHI - FAKT TULA MAHIT -->
+<div class="secureBox"><div style="font-weight:900;color:#facc15">OWNER LOGIN - SECURE ACCESS</div><input id="ownerCode" type="password" placeholder="Enter Owner Code" style="margin-top:14px;text-align:center;font-weight:900;font-size:18px;border-color:#facc15"><button onclick="unlockOwner()" style="width:100%;background:#facc15;color:#000;font-weight:900;padding:14px;border-radius:12px;border:none;margin-top:12px">UNLOCK PANEL</button><div id="ownerErr" style="display:none;text-align:center;color:#ef4444;margin-top:10px">Wrong Code - Access Denied</div><div style="font-size:9px;color:#555;text-align:center;margin-top:8px">Secure - Auto Lock Enabled - Only Owner Knows Code</div></div>
+<div id="ownerInside" style="display:none">
+
+<div class="editBox codeBox" style="border-color:#ef4444">
+<div style="font-weight:900;color:#ef4444;text-align:center;font-size:16px">🔐 CHANGE OWNER CODE - SECURE</div>
+<div style="background:#0a0a0f;border:1px solid #ef444455;border-radius:12px;padding:12px;margin-top:12px">
+<div style="font-size:11px;color:#888">Current Code: <span style="color:#22c55e;font-weight:900">•••••• Hidden - Only You Know</span></div>
+<div style="font-size:11px;color:#888;margin-top:6px">New Code:</div><input id="newOwnerCode" type="password" placeholder="Enter New Secure Code" style="margin-top:4px">
+<div style="font-size:11px;color:#888;margin-top:6px">Confirm New Code:</div><input id="confirmNewCode" type="password" placeholder="Confirm New Secure Code" style="margin-top:4px">
+<button onclick="changeOwnerCode()" style="width:100%;background:#ef4444;color:#fff;padding:14px;border:none;border-radius:12px;font-weight:900;margin-top:12px;font-size:14px">🔐 UPDATE CODE - SECURE CHANGE</button>
+<div style="font-size:9px;color:#666;text-align:center;margin-top:6px">Code Will Never Be Displayed Anywhere - Fully Hidden & Secure</div>
+</div>
+</div>
+
+<div class="editBox priceBox" style="border-color:#22c55e">
+<div style="font-weight:900;color:#22c55e;text-align:center;font-size:16px">💰 PRICE SETTINGS</div>
+<div style="background:#0a0a0f;border:1px solid #22c55e;border-radius:12px;padding:12px;margin-top:12px"><div style="font-size:13px;color:#22c55e;font-weight:900">FREE - PRICE CHANGE</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px"><div><div style="font-size:9px;color:#888">PRIZE ₹</div><input id="editFreePrize" type="number" value="500" style="margin-top:2px"></div><div><div style="font-size:9px;color:#888">PER-KILL ₹</div><input id="editFreePerKill" type="number" value="10" style="margin-top:2px"></div></div></div>
+<div style="background:#0a0a0f;border:1px solid #22c55e55;border-radius:12px;padding:12px;margin-top:10px"><div style="font-size:13px;color:#22c55e;font-weight:900">SOLO</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px"><div><div style="font-size:9px;color:#888">PRIZE ₹</div><input id="editSoloPrize" type="number" value="500" style="margin-top:2px"></div><div><div style="font-size:9px;color:#888">ENTRY ₹</div><input id="editSoloEntry" type="number" value="20" style="margin-top:2px"></div><div><div style="font-size:9px;color:#888">PER-KILL ₹</div><input id="editSoloPerKill" type="number" value="10" style="margin-top:2px"></div></div></div>
+<div style="background:#0a0a0f;border:1px solid #3b82f655;border-radius:12px;padding:12px;margin-top:10px"><div style="font-size:13px;color:#3b82f6;font-weight:900">DUO</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px"><div><div style="font-size:9px;color:#888">PRIZE ₹</div><input id="editDuoPrize" type="number" value="1000" style="margin-top:2px"></div><div><div style="font-size:9px;color:#888">ENTRY ₹</div><input id="editDuoEntry" type="number" value="40" style="margin-top:2px"></div><div><div style="font-size:9px;color:#888">PER-KILL ₹</div><input id="editDuoPerKill" type="number" value="20" style="margin-top:2px"></div></div></div>
+<div style="background:#0a0a0f;border:1px solid #a855f755;border-radius:12px;padding:12px;margin-top:10px"><div style="font-size:13px;color:#a855f7;font-weight:900">SQUAD</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px"><div><div style="font-size:9px;color:#888">PRIZE ₹</div><input id="editSquadPrize" type="number" value="2000" style="margin-top:2px"></div><div><div style="font-size:9px;color:#888">ENTRY ₹</div><input id="editSquadEntry" type="number" value="80" style="margin-top:2px"></div><div><div style="font-size:9px;color:#888">PER-KILL ₹</div><input id="editSquadPerKill" type="number" value="40" style="margin-top:2px"></div></div></div>
+<button onclick="savePrice()" style="width:100%;background:#22c55e;color:#000;padding:14px;border:none;border-radius:12px;font-weight:900;margin-top:14px;font-size:14px">💾 SAVE ALL PRICES</button>
+</div>
+
+<div class="editBox"><div style="font-weight:900;color:#facc15;text-align:center;font-size:16px">📅 SCHEDULE</div><label style="font-size:11px;color:#22c55e;font-weight:900;margin-top:10px;display:block">SOLO</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><input id="editSoloDate" type="date"><input id="editSoloTime" type="time" value="21:00"></div><input id="editSoloTitle" value="Today 9:00 PM - Solo" style="margin-top:6px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px"><input id="editSoloRoomId" placeholder="Room ID"><input id="editSoloRoomPass" placeholder="Room Password"></div><label style="font-size:11px;color:#3b82f6;font-weight:900;margin-top:12px;display:block">DUO</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><input id="editDuoDate" type="date"><input id="editDuoTime" type="time" value="21:30"></div><input id="editDuoTitle" value="Today 9:30 PM - Duo" style="margin-top:6px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px"><input id="editDuoRoomId" placeholder="Room ID"><input id="editDuoRoomPass" placeholder="Room Password"></div><label style="font-size:11px;color:#a855f7;font-weight:900;margin-top:12px;display:block">SQUAD</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><input id="editSquadDate" type="date"><input id="editSquadTime" type="time" value="22:00"></div><input id="editSquadTitle" value="Today 10:00 PM - Squad" style="margin-top:6px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px"><input id="editSquadRoomId" placeholder="Room ID"><input id="editSquadRoomPass" placeholder="Room Password"></div><button onclick="saveRoom()" style="width:100%;background:#facc15;color:#000;padding:14px;border:none;border-radius:12px;font-weight:900;margin-top:14px;font-size:14px">💾 SAVE SCHEDULE</button></div>
+<button onclick="lockOwnerAndGoHome()" style="width:92%;margin:12px 4%;background:#222;color:#fff;padding:14px;border-radius:12px;border:none">🔒 LOCK PANEL & GO HOME</button>
+</div>
+</div>
+</div>
+
+<script>
+// CODE 189898 - HIDDEN - KUTHECH DISPLAY NAHI - FAKT TULA MAHIT
+localStorage.setItem("owner_code_custom_secure", "189898");
+var OWNER_CODE = localStorage.getItem("owner_code_custom_secure") || "189898";
+var OWNER_UPI="suraj-patil-5544@fam";
+var CONFIG=JSON.parse(localStorage.getItem("config_secure_hidden")||'{"free":{"prize":500,"entry":0,"perkill":10},"solo":{"prize":500,"entry":20,"perkill":10},"duo":{"prize":1000,"entry":40,"perkill":20},"squad":{"prize":2000,"entry":80,"perkill":40}}');
+var ROOM=JSON.parse(localStorage.getItem("room_secure_hidden")||'{"free":{"id":"","pass":"","time":"21:00","date":"","title":"Today 9:00 PM - FREE","ts":0},"solo":{"id":"","pass":"","time":"21:00","date":"","title":"Today 9:00 PM - Solo","ts":0},"duo":{"id":"","pass":"","time":"21:30","date":"","title":"Today 9:30 PM - Duo","ts":0},"squad":{"id":"","pass":"","time":"22:00","date":"","title":"Today 10:00 PM - Squad","ts":0}}');
+var rooms=JSON.parse(localStorage.getItem("rooms_secure_hidden")||'{"free":{"erangel":{"max":100,"slots":[],"names":{}}},"solo":{"erangel":{"max":100,"slots":[],"names":{}}},"duo":{"erangel":{"max":50,"slots":[],"names":{}}},"squad":{"erangel":{"max":25,"slots":[],"names":{}}}}');
+var FREE_USED=localStorage.getItem("free_used_secure_hidden")==="1";
+var FREE_LOCKED_FOREVER=localStorage.getItem("free_locked_secure_hidden")==="1" || FREE_USED;
+var currentPay={mode:null};
+
+function copyUpi(){navigator.clipboard.writeText(OWNER_UPI); alert("UPI Copied");}
+function saveData(){localStorage.setItem("rooms_secure_hidden",JSON.stringify(rooms)); localStorage.setItem("config_secure_hidden",JSON.stringify(CONFIG)); localStorage.setItem("room_secure_hidden",JSON.stringify(ROOM)); localStorage.setItem("free_used_secure_hidden",FREE_USED?"1":"0"); localStorage.setItem("free_locked_secure_hidden",FREE_LOCKED_FOREVER?"1":"0");}
+
+function changeOwnerCode(){
+var newCode=document.getElementById("newOwnerCode").value.trim();
+var confirmCode=document.getElementById("confirmNewCode").value.trim();
+if(newCode.length<4){alert("Enter valid code - Min 4 characters"); return;}
+if(newCode!==confirmCode){alert("Codes do not match"); return;}
+OWNER_CODE=newCode;
+localStorage.setItem("owner_code_custom_secure",newCode);
+document.getElementById("newOwnerCode").value=""; document.getElementById("confirmNewCode").value="";
+alert("✅ Code Updated Successfully - New Code Active - Old Code Will Not Work - Remember Your New Code - Hidden & Secure");
+}
+
+function lockOwnerPanel(){
+document.getElementById("ownerInside").style.display="none";
+document.getElementById("ownerCode").value="";
+document.getElementById("newOwnerCode").value="";
+document.getElementById("confirmNewCode").value="";
+document.getElementById("ownerErr").style.display="none";
+}
+function lockOwnerAndGoHome(){lockOwnerPanel(); openPage('homePage');}
+function savePrice(){
+CONFIG.free.prize=parseInt(document.getElementById("editFreePrize").value)||500;
+CONFIG.free.perkill=parseInt(document.getElementById("editFreePerKill").value)||10;
+CONFIG.solo.prize=parseInt(document.getElementById("editSoloPrize").value)||500;
+CONFIG.solo.entry=parseInt(document.getElementById("editSoloEntry").value)||20;
+CONFIG.solo.perkill=parseInt(document.getElementById("editSoloPerKill").value)||10;
+CONFIG.duo.prize=parseInt(document.getElementById("editDuoPrize").value)||1000;
+CONFIG.duo.entry=parseInt(document.getElementById("editDuoEntry").value)||40;
+CONFIG.duo.perkill=parseInt(document.getElementById("editDuoPerKill").value)||20;
+CONFIG.squad.prize=parseInt(document.getElementById("editSquadPrize").value)||2000;
+CONFIG.squad.entry=parseInt(document.getElementById("editSquadEntry").value)||80;
+CONFIG.squad.perkill=parseInt(document.getElementById("editSquadPerKill").value)||40;
+saveData(); applyPrice(); alert("Price Saved");
+}
+function applyFreeLockUI(){
+var isLocked=FREE_LOCKED_FOREVER || FREE_USED;
+document.getElementById("freeBannerHome").style.display=isLocked?"none":"block";
+document.getElementById("freeBannerLockedHome").style.display=isLocked?"block":"none";
+document.getElementById("freeCardHome").classList.toggle("locked",isLocked);
+document.getElementById("freeLockOverlayHome").style.display=isLocked?"flex":"none";
+}
+function saveRoom(){
+["free","solo","duo","squad"].forEach(function(mode){
+var dateEl=document.getElementById("edit"+mode.charAt(0).toUpperCase()+mode.slice(1)+"Date");
+var timeEl=document.getElementById("edit"+mode.charAt(0).toUpperCase()+mode.slice(1)+"Time");
+var titleEl=document.getElementById("edit"+mode.charAt(0).toUpperCase()+mode.slice(1)+"Title");
+var idEl=document.getElementById("edit"+mode.charAt(0).toUpperCase()+mode.slice(1)+"RoomId");
+var passEl=document.getElementById("edit"+mode.charAt(0).toUpperCase()+mode.slice(1)+"RoomPass");
+if(!dateEl) return;
+var date=dateEl.value; var time=timeEl.value; var title=titleEl.value; var id=idEl.value; var pass=passEl.value;
+ROOM[mode].date=date; ROOM[mode].time=time; ROOM[mode].title=title; ROOM[mode].id=id; ROOM[mode].pass=pass;
+if(date && time){var dt=new Date(date+"T"+time); ROOM[mode].ts=dt.getTime();}else if(time){var today=new Date(); var p=time.split(":"); today.setHours(parseInt(p[0]),parseInt(p[1]),0,0); ROOM[mode].ts=today.getTime(); ROOM[mode].date=today.toISOString().split("T")[0];}
+});
+saveData(); applyRoom(); alert("Schedule Saved");
+}
+function applyPrice(){
+document.getElementById("freePrizeHome").innerText="₹"+CONFIG.free.prize;
+document.getElementById("freePerKillHome").innerText=CONFIG.free.perkill;
+document.getElementById("soloPrizeHome").innerText="₹"+CONFIG.solo.prize;
+document.getElementById("soloEntryHome").innerText="₹"+CONFIG.solo.entry;
+document.getElementById("duoPrizeHome").innerText="₹"+CONFIG.duo.prize;
+document.getElementById("duoEntryHome").innerText="₹"+CONFIG.duo.entry;
+document.getElementById("squadPrizeHome").innerText="₹"+CONFIG.squad.prize;
+document.getElementById("squadEntryHome").innerText="₹"+CONFIG.squad.entry;
+document.getElementById("soloEntryBtn").innerText="₹"+CONFIG.solo.entry;
+document.getElementById("duoEntryBtn").innerText="₹"+CONFIG.duo.entry;
+document.getElementById("squadEntryBtn").innerText="₹"+CONFIG.squad.entry;
+document.getElementById("soloPerKillHome").innerText=CONFIG.solo.perkill;
+document.getElementById("duoPerKillHome").innerText=CONFIG.duo.perkill;
+document.getElementById("squadPerKillHome").innerText=CONFIG.squad.perkill;
+document.getElementById("editFreePrize").value=CONFIG.free.prize;
+document.getElementById("editFreePerKill").value=CONFIG.free.perkill;
+document.getElementById("editSoloPrize").value=CONFIG.solo.prize;
+document.getElementById("editSoloEntry").value=CONFIG.solo.entry;
+document.getElementById("editSoloPerKill").value=CONFIG.solo.perkill;
+document.getElementById("editDuoPrize").value=CONFIG.duo.prize;
+document.getElementById("editDuoEntry").value=CONFIG.duo.entry;
+document.getElementById("editDuoPerKill").value=CONFIG.duo.perkill;
+document.getElementById("editSquadPrize").value=CONFIG.squad.prize;
+document.getElementById("editSquadEntry").value=CONFIG.squad.entry;
+document.getElementById("editSquadPerKill").value=CONFIG.squad.perkill;
+}
+function applyRoom(){
+["free","solo","duo","squad"].forEach(function(mode){
+var r=ROOM[mode];
+var gtEl=document.getElementById("gameTime"+mode.charAt(0).toUpperCase()+mode.slice(1)); if(gtEl) gtEl.innerText=r.title;
+var titleEl=document.getElementById("edit"+mode.charAt(0).toUpperCase()+mode.slice(1)+"Title"); if(titleEl) titleEl.value=r.title;
+var idEl=document.getElementById("edit"+mode.charAt(0).toUpperCase()+mode.slice(1)+"RoomId"); if(idEl) idEl.value=r.id;
+var passEl=document.getElementById("edit"+mode.charAt(0).toUpperCase()+mode.slice(1)+"RoomPass"); if(passEl) passEl.value=r.pass;
+var dateEl=document.getElementById("edit"+mode.charAt(0).toUpperCase()+mode.slice(1)+"Date"); if(dateEl) dateEl.value=r.date||new Date().toISOString().split("T")[0];
+var timeEl=document.getElementById("edit"+mode.charAt(0).toUpperCase()+mode.slice(1)+"Time"); if(timeEl) timeEl.value=r.time||"21:00";
+});
+document.getElementById("gameTimeHome").innerText=ROOM.solo.title;
+applyFreeLockUI();
+}
+function updateCountdown(){
+var now=new Date().getTime();
+["free","solo","duo","squad"].forEach(function(mode){
+var r=ROOM[mode]; var diff=r.ts?r.ts-now:0;
+var hEl=document.getElementById("cdH"+mode.charAt(0).toUpperCase()+mode.slice(1));
+var mEl=document.getElementById("cdM"+mode.charAt(0).toUpperCase()+mode.slice(1));
+var sEl=document.getElementById("cdS"+mode.charAt(0).toUpperCase()+mode.slice(1));
+if(!r.ts){if(hEl) hEl.innerText="00"; if(mEl) mEl.innerText="00"; if(sEl) sEl.innerText="00"; return;}
+if(diff>0){var h=Math.floor(diff/3600000); var m=Math.floor((diff%3600000)/60000); var s=Math.floor((diff%60000)/1000); if(hEl) hEl.innerText=(h<10?"0"+h:h); if(mEl) mEl.innerText=(m<10?"0"+m:m); if(sEl) sEl.innerText=(s<10?"0"+s:s);}else{if(hEl) hEl.innerText="00"; if(mEl) mEl.innerText="00"; if(sEl) sEl.innerText="00";}
+});
+var r=ROOM["solo"]; var diff=r.ts?r.ts-now:0;
+var hElHome=document.getElementById("cdHHome"); var mElHome=document.getElementById("cdMHome"); var sElHome=document.getElementById("cdSHome");
+if(r.ts && diff>0){var h=Math.floor(diff/3600000); var m=Math.floor((diff%3600000)/60000); var s=Math.floor((diff%60000)/1000); if(hElHome) hElHome.innerText=(h<10?"0"+h:h); if(mElHome) mElHome.innerText=(m<10?"0"+m:m); if(sElHome) sElHome.innerText=(s<10?"0"+s:s);}else{if(hElHome) hElHome.innerText="00"; if(mElHome) mElHome.innerText="00"; if(sElHome) sElHome.innerText="00";}
+}
+function openPage(id){
+if(id!=="ownerLoginPage"){lockOwnerPanel();}
+document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active")});
+document.getElementById(id).classList.add("active");
+}
+function unlockOwner(){
+var c=document.getElementById("ownerCode").value.trim();
+if(c===OWNER_CODE){document.getElementById("ownerInside").style.display="block";document.getElementById("ownerErr").style.display="none";applyPrice(); applyRoom();}else{document.getElementById("ownerInside").style.display="none";document.getElementById("ownerErr").style.display="block";}
+}
+function getMax(mode){return mode==="free"||mode==="solo"?100:mode==="duo"?50:25;}
+function isValidUpi(upi){return /^[a-zA-Z0-9.\-_]+@[a-zA-Z]+$/.test(upi);}
+function renderAll(){
+["free","solo","duo","squad"].forEach(function(mode){
+var R=rooms[mode]?rooms[mode]["erangel"]:null; if(!R) return; var MAX=getMax(mode);
+var grid=document.getElementById(mode+"Grid");
+if(grid){var html="";for(var i=1;i<=MAX;i++){var booked=R.slots.indexOf(i)!==-1;if(booked){html+="<div class='slot book'><div style='font-size:9px;background:#22c55e;color:#000;padding:2px 6px;border-radius:10px;font-weight:900'>#"+i+"</div><div style='font-size:11px;font-weight:900'>"+R.names[i]+"</div></div>";}else{html+="<div class='slot'><div style='font-weight:900'>"+i+"</div><div style='font-size:10px;color:#555'>#"+i+"</div></div>";}}grid.innerHTML=html;}
+});
+applyFreeLockUI();
+}
+function bookFree(){
+if(FREE_USED || FREE_LOCKED_FOREVER){alert("Free Already Claimed"); return;}
+var name=document.getElementById("freeName").value.trim();var upi=document.getElementById("freeUpi").value.trim();
+if(name.length<2){alert("Enter BGMI Name");return;}
+if(!isValidUpi(upi)){alert("Enter Valid UPI ID");return;}
+var R=rooms["free"]["erangel"];var MAX=100;var nxt=1;while(R.slots.indexOf(nxt)!==-1 && nxt<=MAX){nxt++;}if(nxt>MAX){alert("Full");return;}
+R.slots.push(nxt);R.names[nxt]=name;
+FREE_USED=true; FREE_LOCKED_FOREVER=true;
+saveData(); renderAll();
+}
+function payAndBook(mode){
+var name=document.getElementById(mode+"Name").value.trim();var upi=document.getElementById(mode+"Upi").value.trim();
+if(name.length<2){alert("Enter BGMI Name");return;}
+if(!isValidUpi(upi)){alert("Enter Valid UPI ID");return;}
+var R=rooms[mode]["erangel"];var MAX=getMax(mode);var nxt=1;while(R.slots.indexOf(nxt)!==-1 && nxt<=MAX){nxt++;}if(nxt>MAX){alert("Full");return;}
+currentPay={mode:mode,name:name,upi:upi,map:"erangel",slot:nxt,entry:CONFIG[mode].entry};
+window.location.href="upi://pay?pa="+OWNER_UPI+"&pn=GHOST "+mode.toUpperCase()+"&am="+currentPay.entry+"&cu=INR";
+setTimeout(function(){document.getElementById("payVerifyBox"+mode.charAt(0).toUpperCase()+mode.slice(1)).style.display="block";},600);
+}
+function confirmPayment(mode){
+var utr=document.getElementById("utrInput"+mode.charAt(0).toUpperCase()+mode.slice(1)).value.trim();
+if(utr.length<6){alert("Enter UTR");return;}
+var m=currentPay.mode;var R=rooms[m]["erangel"];
+var nxt=1;while(R.slots.indexOf(nxt)!==-1 && nxt<=getMax(m)){nxt++;}
+var slot=nxt;
+R.slots.push(slot);R.names[slot]=currentPay.name;
+saveData();
+document.getElementById("payVerifyBox"+mode.charAt(0).toUpperCase()+mode.slice(1)).style.display="none";
+renderAll();
+}
+function cancelPayment(mode){document.getElementById("payVerifyBox"+mode.charAt(0).toUpperCase()+mode.slice(1)).style.display="none";}
+
+applyPrice(); applyRoom(); renderAll();
+setInterval(function(){updateCountdown();},1000);
+updateCountdown();
+</script>
+</div>
+</body>
+</html>
